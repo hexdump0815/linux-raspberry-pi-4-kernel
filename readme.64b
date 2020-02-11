@@ -1,0 +1,48 @@
+# name: -rpi-64b + no auto
+
+# doc: https://gist.github.com/G-UK/ee7edc4844f14fec12450b2211fc886e
+# u-boot: https://bugs.launchpad.net/ubuntu/+source/u-boot/+bug/1847500
+
+cp /compile/doc/rpi/config.64b /compile/source/linux-rpi/.config
+cd /compile/source/linux-rpi
+
+# git pull
+export ARCH=arm64
+# make bcm2711_defconfig + fix options - see misc.64b/options
+make oldconfig
+make -j 4 CFLAGS="-march=armv8-a+crc -mtune=cortex-a72" CXXFLAGS="-march=armv8-a+crc -mtune=cortex-a72" Image dtbs modules
+export kver=`make kernelrelease`
+echo ${kver}
+# remove debug info if there and wanted
+# find . -type f -name '*.ko' | sudo xargs -n 1 objcopy --strip-unneeded
+make modules_install
+# make headers_install INSTALL_HDR_PATH=/usr
+cp -v .config /boot/config-${kver}
+# for rpi
+cp -v arch/arm64/boot/Image /boot/Image-${kver}
+# in case that is needed anywhere
+mkimage -A arm64 -O linux -T kernel -C none -a 0x1080000 -e 0x1080000 -n linux-${kver} -d arch/arm64/boot/Image /boot/uImage-${kver}
+mkdir /boot/dtb-${kver}
+cp -v arch/arm64/boot/dts/broadcom/bcm*-rpi-*.dtb /boot/dtb-${kver}/
+cp -v System.map /boot/System.map-${kver}
+cd /boot
+update-initramfs -c -k ${kver}
+mkimage -A arm64 -O linux -T ramdisk -a 0x0 -e 0x0 -n initrd.img-${kver} -d initrd.img-${kver} uInitrd-${kver}
+tar cvzf /compile/source/linux-rpi/${kver}.tar.gz /boot/*-${kver} /lib/modules/${kver}
+cp -v /compile/doc/rpi/config.64b /compile/doc/rpi/config.64b.old
+cp -v /compile/source/linux-rpi/.config /compile/doc/rpi/config.64b
+cp -v /compile/source/linux-rpi/.config /compile/doc/rpi/config.64b-${kver}
+cp -v /compile/source/linux-rpi/*.tar.gz /compile/result/rpi
+cd /compile/source/linux-rpi
+make distclean
+rm ${kver}.tar.gz
+
+# rpi 4 aarch64
+# cat boot.txt-4.19.95-rpi-64b+
+setenv kver 4.19.95-rpi-64b+
+setenv bootargs "console=ttyS1,115200n8 console=tty0 root=/dev/mmcblk0p3 rootwait ro fsck.fix=yes fsck.repair=yes net.ifnames=0 ipv6.disable=1 smsc95xx.macaddr=${usbethaddr} threadirqs noresume"
+fatload mmc 0 ${kernel_addr_r} Image-${kver}
+fatload mmc 0 ${ramdisk_addr_r} uInitrd-${kver}
+fatload mmc 0 ${fdt_addr_r} dtb-${kver}/bcm2711-rpi-4-b.dtb
+booti ${kernel_addr_r} ${ramdisk_addr_r} ${fdt_addr_r}
+# use: mkimage -A arm -T script -O linux -d boot.txt boot.scr
