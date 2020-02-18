@@ -10,7 +10,8 @@ cd /compile/source/linux-rpi
 export ARCH=arm64
 # make bcm2711_defconfig + fix options - see misc.64b/options
 make oldconfig
-make -j 4 CFLAGS="-march=armv8-a+crc -mtune=cortex-a72" CXXFLAGS="-march=armv8-a+crc -mtune=cortex-a72" Image dtbs modules
+#make -j 4 CFLAGS="-march=armv8-a+crc -mtune=cortex-a72" CXXFLAGS="-march=armv8-a+crc -mtune=cortex-a72" Image dtbs modules
+make -j 4 Image dtbs modules
 export kver=`make kernelrelease`
 echo ${kver}
 # remove debug info if there and wanted
@@ -33,9 +34,6 @@ cp -v /compile/doc/rpi/config.64b /compile/doc/rpi/config.64b.old
 cp -v /compile/source/linux-rpi/.config /compile/doc/rpi/config.64b
 cp -v /compile/source/linux-rpi/.config /compile/doc/rpi/config.64b-${kver}
 cp -v /compile/source/linux-rpi/*.tar.gz /compile/result/rpi
-cd /compile/source/linux-rpi
-make distclean
-rm ${kver}.tar.gz
 
 # rpi 4 aarch64
 # cat boot.txt-4.19.95-rpi-64b+
