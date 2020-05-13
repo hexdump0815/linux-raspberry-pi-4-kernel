@@ -1,0 +1,36 @@
+diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+index f27678156e27..2032332ad6b9 100644
+--- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
++++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+@@ -537,10 +537,30 @@
+ 	pinctrl-0 = <&audio_pins>;
+ };
+ 
+-&vc4 {
++&fb {
+ 	status = "disabled";
+ };
+ 
++&firmwarekms {
++	status = "okay";
++};
++
++&vc4 {
++	status = "okay";
++};
++
++&v3dbus {
++	v3d: v3d@7ec04000 {
++		status = "okay";
++	};
++};
++
++&vchiq {
++	audio: bcm2835_audio {
++		status = "okay";
++	};
++};
++
+ &pixelvalve0 {
+ 	status = "disabled";
+ };
