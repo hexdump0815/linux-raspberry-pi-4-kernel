@@ -4,6 +4,9 @@ cd /compile/source/linux-rpi
 
 ./scripts/config -d CONFIG_EXT2_FS
 ./scripts/config -d CONFIG_EXT3_FS
+./scripts/config -d CONFIG_BLK_DEV_RAM
+./scripts/config -d CONFIG_BLK_DEV_RAM_COUNT
+./scripts/config -d CONFIG_BLK_DEV_RAM_SIZE
 ./scripts/config --set-val CONFIG_MAGIC_SYSRQ_DEFAULT_ENABLE 0
 
 for i in `cat /compile/doc/rpi/misc.64b/options/additional-options-yes.txt`; do
