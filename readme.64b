@@ -2,6 +2,7 @@
 
 # doc: https://gist.github.com/G-UK/ee7edc4844f14fec12450b2211fc886e
 # u-boot: https://bugs.launchpad.net/ubuntu/+source/u-boot/+bug/1847500
+# get thermal working: https://github.com/raspberrypi/linux/issues/3524
 
 cp /compile/doc/rpi/config.64b /compile/source/linux-rpi/.config
 cd /compile/source/linux-rpi
@@ -39,8 +40,8 @@ cp -v /compile/source/linux-rpi/.config /compile/doc/rpi/config.64b-${kver}
 cp -v /compile/source/linux-rpi/*.tar.gz /compile/result/rpi
 
 # rpi 4 aarch64
-# cat boot.txt-4.19.95-rpi-64b+
-setenv kver 4.19.95-rpi-64b+
+# cat boot.txt-5.6.10-rpi-64b+
+setenv kver 5.6.10-rpi-64b+
 setenv bootargs "console=ttyS1,115200n8 console=tty0 root=/dev/mmcblk0p3 rootwait ro fsck.fix=yes fsck.repair=yes net.ifnames=0 ipv6.disable=1 smsc95xx.macaddr=${usbethaddr} threadirqs noresume"
 fatload mmc 0 ${kernel_addr_r} Image-${kver}
 fatload mmc 0 ${ramdisk_addr_r} uInitrd-${kver}
