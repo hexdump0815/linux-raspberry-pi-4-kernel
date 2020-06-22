@@ -8,7 +8,9 @@ cp /compile/doc/rpi/config.64b /compile/source/linux-rpi/.config
 cd /compile/source/linux-rpi
 
 # do what the vc4-fkms-v3d overlay usually does
-patch -p1 < /compile/doc/rpi/misc.64b/vc4-fkms-v3d-dtb.patch
+#patch -p1 < /compile/doc/rpi/misc.64b/vc4-fkms-v3d-dtb.patch
+# same for v4.19
+patch -p1 < /compile/doc/rpi/misc.64b/vc4-fkms-v3d-dtb-v4.19.patch
 
 # git pull
 export ARCH=arm64
