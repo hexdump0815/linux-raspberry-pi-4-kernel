@@ -8,7 +8,8 @@ cp /compile/doc/rpi/config.64b /compile/source/linux-rpi/.config
 cd /compile/source/linux-rpi
 
 # bring the tree to clean v5.8.0 state (was on rc7 before on the rpi-5.8.y)
-patch -p1 < /compile/doc/rpi/misc.64b/v5.8.0-rc7-v5.8.0.patch
+# # no longer required as the source tree is at 5.8.x now
+#patch -p1 < /compile/doc/rpi/misc.64b/v5.8.0-rc7-v5.8.0.patch
 # do what the vc4-fkms-v3d overlay usually does
 patch -p1 < /compile/doc/rpi/misc.64b/vc4-fkms-v3d-dtb.patch
 # same for v4.19
