@@ -21,6 +21,11 @@ export ARCH=arm64
 make oldconfig
 #make -j 4 CFLAGS="-march=armv8-a+crc -mtune=cortex-a72" CXXFLAGS="-march=armv8-a+crc -mtune=cortex-a72" Image dtbs modules
 make -j 4 Image dtbs modules
+cd tools/perf
+make
+cd ../power/cpupower
+make
+cd ../../..
 export kver=`make kernelrelease`
 echo ${kver}
 # remove debug info if there and wanted
@@ -32,6 +37,10 @@ cp -v .config /boot/config-${kver}
 cp -v arch/arm64/boot/Image /boot/Image-${kver}
 # in case that is needed anywhere
 mkimage -A arm64 -O linux -T kernel -C none -a 0x1080000 -e 0x1080000 -n linux-${kver} -d arch/arm64/boot/Image /boot/uImage-${kver}
+mkdir -p /boot/tools-${kver}
+cp -v tools/perf/perf /boot/tools-${kver}
+cp -v tools/power/cpupower/cpupower /boot/tools-${kver}
+cp -v tools/power/cpupower/libcpupower.so.0.0.1 /boot/tools-${kver}/libcpupower.so.0
 mkdir /boot/dtb-${kver}
 cp -v arch/arm64/boot/dts/broadcom/bcm*-rpi-*.dtb /boot/dtb-${kver}/
 cp -v System.map /boot/System.map-${kver}
