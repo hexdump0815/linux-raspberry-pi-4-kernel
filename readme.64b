@@ -1,25 +1,21 @@
-# name: -rpi-64b + no auto
+# directories:
+# - /compile/doc/stable - the files in this dir
+# - /compile/source/linux-stable - the kernel sources checked out from gitrepo
+# - /compile/result/stable - the resulting kernel, modules etc. tar.gz files
+# name: rpi-64b
 
-# doc: https://gist.github.com/G-UK/ee7edc4844f14fec12450b2211fc886e
-# u-boot: https://bugs.launchpad.net/ubuntu/+source/u-boot/+bug/1847500
-# get thermal working: https://github.com/raspberrypi/linux/issues/3524
+# patches:
+# none so far
 
 cp /compile/doc/rpi/config.64b /compile/source/linux-rpi/.config
 cd /compile/source/linux-rpi
-
-# bring the tree to clean v5.8.0 state (was on rc7 before on the rpi-5.8.y)
-# # no longer required as the source tree is at 5.8.x now
-#patch -p1 < /compile/doc/rpi/misc.64b/v5.8.0-rc7-v5.8.0.patch
-# do what the vc4-fkms-v3d overlay usually does
-patch -p1 < /compile/doc/rpi/misc.64b/vc4-fkms-v3d-dtb.patch
-# same for v4.19
-#patch -p1 < /compile/doc/rpi/misc.64b/vc4-fkms-v3d-dtb-v4.19.patch
 
 # git pull
 export ARCH=arm64
 # make bcm2711_defconfig + fix options - see misc.64b/options
 make oldconfig
-#make -j 4 CFLAGS="-march=armv8-a+crc -mtune=cortex-a72" CXXFLAGS="-march=armv8-a+crc -mtune=cortex-a72" Image dtbs modules
+# for a72 tuning below maybe with:
+# CFLAGS="-march=armv8-a+crc -mtune=cortex-a72" CXXFLAGS="-march=armv8-a+crc -mtune=cortex-a72"
 make -j 4 Image dtbs modules
 cd tools/perf
 make
@@ -39,10 +35,10 @@ cp -v tools/power/cpupower/libcpupower.so.0.0.1 /lib/modules/${kver}/tools/libcp
 cp -v .config /boot/config-${kver}
 # for rpi
 cp -v arch/arm64/boot/Image /boot/Image-${kver}
-# in case that is needed anywhere
-mkimage -A arm64 -O linux -T kernel -C none -a 0x1080000 -e 0x1080000 -n linux-${kver} -d arch/arm64/boot/Image /boot/uImage-${kver}
 mkdir /boot/dtb-${kver}
 cp -v arch/arm64/boot/dts/broadcom/bcm*-rpi-*.dtb /boot/dtb-${kver}/
+mkdir /boot/overlays-${kver}
+cp -v arch/arm64/boot/dts/overlays/*.dtbo* /boot/overlays-${kver}/
 cp -v System.map /boot/System.map-${kver}
 cd /boot
 update-initramfs -c -k ${kver}
@@ -52,6 +48,7 @@ cp -v /compile/doc/rpi/config.64b /compile/doc/rpi/config.64b.old
 cp -v /compile/source/linux-rpi/.config /compile/doc/rpi/config.64b
 cp -v /compile/source/linux-rpi/.config /compile/doc/rpi/config.64b-${kver}
 cp -v /compile/source/linux-rpi/*.tar.gz /compile/result/rpi
+
 
 # rpi 4 aarch64
 # cat boot.txt-5.6.10-rpi-64b+
