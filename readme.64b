@@ -38,7 +38,7 @@ cp -v arch/arm64/boot/Image /boot/Image-${kver}
 mkdir /boot/dtb-${kver}
 cp -v arch/arm64/boot/dts/broadcom/bcm*-rpi-*.dtb /boot/dtb-${kver}/
 mkdir /boot/overlays-${kver}
-cp -v arch/arm64/boot/dts/overlays/*.dtbo* /boot/overlays-${kver}/
+cp -v arch/arm64/boot/dts/overlays/*.dtbo /boot/overlays-${kver}/
 cp -v System.map /boot/System.map-${kver}
 cd /boot
 update-initramfs -c -k ${kver}
