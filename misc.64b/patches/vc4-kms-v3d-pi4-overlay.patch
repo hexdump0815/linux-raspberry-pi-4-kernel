@@ -1,0 +1,138 @@
+diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+index 42a0d5226e7c..1f908198c7dd 100644
+--- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
++++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
+@@ -191,6 +191,7 @@
+ 
+ &hvs {
+ 	clocks = <&firmware_clocks 4>;
++	status = "okay";
+ };
+ 
+ &pixelvalve0 {
+@@ -205,6 +206,10 @@
+ 	status = "okay";
+ };
+ 
++&pixelvalve3 {
++	status = "okay";
++};
++
+ &pixelvalve4 {
+ 	status = "okay";
+ };
+@@ -293,12 +298,44 @@
+ 	interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+ };
+ 
++&dvp {
++	status = "okay";
++};
++
++// &soc {
++// 	fb: fb {
++// 		status = "disabled";
++// 	};
++// };
++
++// &soc {
++// 	firmwarekms: firmwarekms@7e600000 {
++// 		status = "disabled";
++// 	};
++// };
++
++&txp {
++	status = "okay";
++};
++
++// &v3dbus {
++// 	v3d: v3d@7ec04000 {
++// 		status = "okay";
++// 	};
++// };
++
++&vchiq {
++	audio: bcm2835_audio {
++		status = "okay";
++	};
++};
++
+ &vc4 {
+ 	status = "okay";
+ };
+ 
+ &vec {
+-	status = "disabled";
++	status = "okay";
+ };
+ 
+ // =============================================
+diff --git a/arch/arm/boot/dts/bcm2711-rpi-400.dts b/arch/arm/boot/dts/bcm2711-rpi-400.dts
+index b75591df87b1..62abc51b1f7b 100644
+--- a/arch/arm/boot/dts/bcm2711-rpi-400.dts
++++ b/arch/arm/boot/dts/bcm2711-rpi-400.dts
+@@ -191,6 +191,7 @@
+ 
+ &hvs {
+ 	clocks = <&firmware_clocks 4>;
++	status = "okay";
+ };
+ 
+ &pixelvalve0 {
+@@ -205,6 +206,10 @@
+ 	status = "okay";
+ };
+ 
++&pixelvalve3 {
++	status = "okay";
++};
++
+ &pixelvalve4 {
+ 	status = "okay";
+ };
+@@ -293,12 +298,44 @@
+ 	interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+ };
+ 
++&dvp {
++	status = "okay";
++};
++
++// &soc {
++// 	fb: fb {
++// 		status = "disabled";
++// 	};
++// };
++
++// &soc {
++// 	firmwarekms: firmwarekms@7e600000 {
++// 		status = "disabled";
++// 	};
++// };
++
++&txp {
++	status = "okay";
++};
++
++// &v3dbus {
++// 	v3d: v3d@7ec04000 {
++// 		status = "okay";
++// 	};
++// };
++
++&vchiq {
++	audio: bcm2835_audio {
++		status = "okay";
++	};
++};
++
+ &vc4 {
+ 	status = "okay";
+ };
+ 
+ &vec {
+-	status = "disabled";
++	status = "okay";
+ };
+ 
+ // =============================================

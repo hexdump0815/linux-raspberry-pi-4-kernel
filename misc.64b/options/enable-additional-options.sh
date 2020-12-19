@@ -20,6 +20,9 @@ cd /compile/source/linux-rpi
 ./scripts/config -d CONFIG_REISERFS_FS
 ./scripts/config -d CONFIG_OCFS2_FS
 
+./scripts/config -d CONFIG_LOCALVERSION_AUTO
+./scripts/config --set-str CONFIG_LOCALVERSION "-rpi-64b"
+
 for i in `cat /compile/doc/rpi/misc.64b/options/additional-options-*-yes.txt`; do
   echo $i
   ./scripts/config -e $i
