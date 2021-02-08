@@ -11,7 +11,7 @@ patch -p1 < /compile/doc/rpi/misc.64b/patches/vc4-kms-v3d-pi4-overlay.patch
 cp /compile/doc/rpi/config.64b /compile/source/linux-rpi/.config
 cd /compile/source/linux-rpi
 
-# git pull --force origin rpi-5.10.y
+# git reset --hard origin/rpi-5.10.y
 export ARCH=arm64
 # make bcm2711_defconfig
 # /compile/doc/rpi/misc.64b/options/enable-docker-options.sh
