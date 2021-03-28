@@ -4,6 +4,9 @@
 # - /compile/result/rpi - the resulting kernel, modules etc. tar.gz files
 # name: rpi-64b
 
+# INFO: based on rpi tree commit: 3e55254ce6f792372bbfe90f77006e75467c1dfe
+#                    from branch: rpi-5.10.y
+
 # patches:
 # do what vc4-kms-v3d-pi4-overlay usually does
 patch -p1 < /compile/doc/rpi/misc.64b/patches/vc4-kms-v3d-pi4-overlay.patch
@@ -13,9 +16,9 @@ cd /compile/source/linux-rpi
 
 # git reset --hard origin/rpi-5.10.y
 export ARCH=arm64
-# make bcm2711_defconfig
-# /compile/doc/rpi/misc.64b/options/enable-docker-options.sh
-# /compile/doc/rpi/misc.64b/options/enable-additional-options.sh
+make bcm2711_defconfig
+/compile/doc/rpi/misc.64b/options/enable-docker-options.sh
+/compile/doc/rpi/misc.64b/options/enable-additional-options.sh
 make oldconfig
 # for a72 tuning below maybe with:
 # CFLAGS="-march=armv8-a+crc -mtune=cortex-a72" CXXFLAGS="-march=armv8-a+crc -mtune=cortex-a72"
