@@ -9,10 +9,18 @@
 
 # patches:
 # do what vc4-kms-v3d-pi4-overlay usually does
-patch -p1 < /compile/doc/rpi/misc.64b/patches/vc4-kms-v3d-pi4-overlay.patch
+# not required anymore as the dtbo files are now merged into the dtb files
+#patch -p1 < /compile/doc/rpi/misc.64b/patches/vc4-kms-v3d-pi4-overlay.patch
 
 cp /compile/doc/rpi/config.64b /compile/source/linux-rpi/.config
 cd /compile/source/linux-rpi
+
+# extra tool required to merge the dtbo files into the dtb: dtmerge
+# this requires: apt-get install libfdt-dev
+cp -r /compile/doc/rpi/misc.64b/misc/dtmerge .
+cd dtmerge
+cc -I. -o dtmerge dtmerge.c dtoverlay.c -l fdt
+cd ..
 
 # git reset --hard origin/rpi-5.10.y
 export ARCH=arm64
@@ -30,6 +38,10 @@ make
 cd ../../..
 export kver=`make kernelrelease`
 echo ${kver}
+# merge the dtbo file into the dtb files
+./dtmerge/dtmerge arch/arm64/boot/dts/broadcom/bcm2711-rpi-4-b.dtb arch/arm64/boot/dts/broadcom/bcm2711-rpi-4-b-vc4-kms-v3d.dtb arch/arm64/boot/dts/overlays/vc4-kms-v3d.dtbo
+./dtmerge/dtmerge arch/arm64/boot/dts/broadcom/bcm2711-rpi-400.dtb arch/arm64/boot/dts/broadcom/bcm2711-rpi-400-vc4-kms-v3d.dtb arch/arm64/boot/dts/overlays/vc4-kms-v3d.dtbo
+./dtmerge/dtmerge arch/arm64/boot/dts/broadcom/bcm2711-rpi-cm4.dtb arch/arm64/boot/dts/broadcom/bcm2711-rpi-cm4-vc4-kms-v3d.dtb arch/arm64/boot/dts/overlays/vc4-kms-v3d.dtbo
 # remove debug info if there and wanted
 # find . -type f -name '*.ko' | sudo xargs -n 1 objcopy --strip-unneeded
 make modules_install
@@ -37,6 +49,8 @@ mkdir -p /lib/modules/${kver}/tools
 cp -v tools/perf/perf /lib/modules/${kver}/tools
 cp -v tools/power/cpupower/cpupower /lib/modules/${kver}/tools
 cp -v tools/power/cpupower/libcpupower.so.0.0.1 /lib/modules/${kver}/tools/libcpupower.so.0
+mkdir -p /lib/modules/${kver}/tools/dtmerge
+cp -v dtmerge/dtmerge /lib/modules/${kver}/tools/dtmerge
 # make headers_install INSTALL_HDR_PATH=/usr
 cp -v .config /boot/config-${kver}
 # for rpi
