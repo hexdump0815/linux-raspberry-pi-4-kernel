@@ -4,7 +4,7 @@
 # - /compile/result/rpi - the resulting kernel, modules etc. tar.gz files
 # name: rpi-64b
 
-# INFO: based on rpi tree commit: 3e55254ce6f792372bbfe90f77006e75467c1dfe
+# INFO: based on rpi tree commit: 7d9d9693c2935bdb6af0089c16d39d91334ea182
 #                    from branch: rpi-5.10.y
 
 # patches:
