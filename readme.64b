@@ -2,17 +2,15 @@
 # - /compile/doc/rpi - the files in this dir
 # - /compile/source/linux-rpi - the kernel sources checked out from gitrepo
 # - /compile/result/rpi - the resulting kernel, modules etc. tar.gz files
+# - /compile/doc/kernel-config-options - https://github.com/hexdump0815/kernel-config-options
 # name: rpi-64b
 
-# INFO: based on rpi tree commit: 7d9d9693c2935bdb6af0089c16d39d91334ea182
-#                    from branch: rpi-5.10.y
+# INFO: based on rpi tree commit: 2be20d05c7f6c92c04b8b3636a95bdd70ff8373c
+#                    from branch: rpi-5.10.y - 5.10.44+
 
 # patches:
 # enable bcm2835 audio for the headphone jack audio to work
 patch -p1 < /compile/doc/rpi/misc.64b/patches/enable-bcm2835-audio.patch
-
-cp /compile/doc/rpi/config.64b /compile/source/linux-rpi/.config
-cd /compile/source/linux-rpi
 
 # extra tool required to merge the dtbo files into the dtb: dtmerge
 # this requires: apt-get install libfdt-dev
@@ -21,12 +19,11 @@ cd dtmerge
 cc -I. -o dtmerge dtmerge.c dtoverlay.c -l fdt
 cd ..
 
-# git reset --hard origin/rpi-5.10.y
+# git reset --hard origin/rpi-5.10.y ; git pull
 export ARCH=arm64
-make bcm2711_defconfig
-/compile/doc/rpi/misc.64b/options/enable-docker-options.sh
-/compile/doc/rpi/misc.64b/options/enable-additional-options.sh
-make oldconfig
+scripts/kconfig/merge_config.sh -m arch/arm64/configs/bcm2711_defconfig /compile/doc/kernel-config-options/docker-options.cfg /compile/doc/kernel-config-options/options-to-remove-generic.cfg /compile/doc/rpi/misc.64b/options/options-to-remove-special.cfg /compile/doc/kernel-config-options/additional-options-generic.cfg /compile/doc/kernel-config-options/additional-options-aarch64.cfg /compile/doc/rpi/misc.64b/options/additional-options-special.cfg
+( cd /compile/doc/kernel-config-options ; git rev-parse --verify HEAD ) > /compile/doc/stable/options.64b
+make olddefconfig
 # for a72 tuning below maybe with:
 # CFLAGS="-march=armv8-a+crc -mtune=cortex-a72" CXXFLAGS="-march=armv8-a+crc -mtune=cortex-a72"
 make -j 4 Image dtbs modules
